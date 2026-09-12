@@ -193,28 +193,37 @@
     <div class="modal-window">
       <!-- Modal Header -->
       <div class="modal-header">
-        <div class="modal-title-wrap">
-          <div class="brand-icon-box" style="width: 32px; height: 32px; border-radius: 8px;">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-          </div>
-          <div>
-            <h2 class="modal-title-text" id="modal-title">Pratinjau Dokumen</h2>
-            <span style="font-size: 0.75rem; color: var(--primary); font-weight: 600;" id="modal-category">Kategori</span>
+        <div class="modal-header-left">
+          <button class="btn-modal-back" id="modal-back-btn" aria-label="Kembali ke Katalog" title="Kembali">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+            <span class="btn-back-label">Kembali</span>
+          </button>
+
+          <div class="modal-title-wrap">
+            <div class="brand-icon-box modal-brand-icon" style="width: 32px; height: 32px; border-radius: 8px;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+            </div>
+            <div class="modal-title-content">
+              <h2 class="modal-title-text" id="modal-title">Pratinjau Dokumen</h2>
+              <span class="modal-category-text" id="modal-category">Kategori</span>
+            </div>
           </div>
         </div>
 
         <div class="modal-header-actions">
-          <button class="btn btn-outline" id="modal-share-btn" title="Salin Tautan Dokumen">
+          <button class="btn btn-outline modal-btn-action" id="modal-share-btn" title="Salin Tautan Dokumen">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
-            Salin Link
+            <span class="btn-action-text">Salin</span>
           </button>
-          <a href="#" target="_blank" rel="noopener noreferrer" class="btn btn-outline" id="modal-drive-btn" title="Buka di Google Drive">
+          <a href="#" target="_blank" rel="noopener noreferrer" class="btn btn-outline modal-btn-action" id="modal-drive-btn" title="Buka di Google Drive">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/></svg>
-            Drive
+            <span class="btn-action-text">Drive</span>
           </a>
-          <a href="#" target="_blank" rel="noopener noreferrer" class="btn btn-primary" id="modal-download-btn" title="Unduh File PDF">
+          <a href="#" target="_blank" rel="noopener noreferrer" class="btn btn-primary modal-btn-action" id="modal-download-btn" title="Unduh File PDF">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-            Unduh
+            <span class="btn-action-text">Unduh</span>
           </a>
           <button class="modal-close-btn" id="modal-close-btn" title="Tutup (Esc)" aria-label="Tutup Pratinjau">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>

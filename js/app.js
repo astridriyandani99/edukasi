@@ -12,9 +12,15 @@ document.addEventListener("DOMContentLoaded", async () => {
     selectedCategory: "all",
     sortBy: "az",
     activeLeaflet: null,
+    isModalOpen: false,
     searchDebounceTimer: null,
     searchTrackTimer: null,
   };
+
+  // Bersihkan hash URL jika tersisa saat reload halaman
+  if (window.location.hash.startsWith("#preview")) {
+    history.replaceState(null, "", window.location.pathname + window.location.search);
+  }
 
   // 3. Referensi Elemen DOM
   const dom = {
@@ -33,6 +39,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     
     // Modal
     modalOverlay: document.getElementById("modal-overlay"),
+    modalBackBtn: document.getElementById("modal-back-btn"),
     modalCloseBtn: document.getElementById("modal-close-btn"),
     modalTitle: document.getElementById("modal-title"),
     modalCategory: document.getElementById("modal-category"),
@@ -254,6 +261,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   function openPreviewModal(leaflet) {
     state.activeLeaflet = leaflet;
+    state.isModalOpen = true;
 
     if (dom.modalTitle) dom.modalTitle.textContent = leaflet.title;
     if (dom.modalCategory) dom.modalCategory.textContent = leaflet.category;
@@ -288,11 +296,19 @@ document.addEventListener("DOMContentLoaded", async () => {
     dom.modalOverlay.classList.add("active");
     document.body.style.overflow = "hidden"; // Kunci scroll latar belakang
 
+    // Tambahkan entri ke Browser History agar tombol Back browser/HP menutup modal alih-alih keluar dari web
+    if (!window.location.hash.startsWith("#preview")) {
+      history.pushState({ modalOpen: true, leafletId: leaflet.id }, "", "#preview");
+    }
+
     // Lacak Event Tampilan Leaflet di GA4
     window.Analytics.trackLeafletView(leaflet);
   }
 
-  function closePreviewModal() {
+  function closePreviewModal(fromHistory = false) {
+    if (!dom.modalOverlay.classList.contains("active")) return;
+
+    state.isModalOpen = false;
     dom.modalOverlay.classList.remove("active");
     document.body.style.overflow = "";
 
@@ -301,6 +317,11 @@ document.addEventListener("DOMContentLoaded", async () => {
       dom.modalIframe.src = "about:blank";
     }
     state.activeLeaflet = null;
+
+    // Jika ditutup lewat tombol UI (bukan tombol back fisik/browser), dan URL masih memiliki hash #preview, mundurkan history browser
+    if (!fromHistory && window.location.hash.startsWith("#preview")) {
+      history.back();
+    }
   }
 
   /* ========================================================================
@@ -384,23 +405,34 @@ document.addEventListener("DOMContentLoaded", async () => {
       });
     }
 
-    // 5. Tutup Modal
+    // 5. Tutup Modal & Navigasi Tombol Kembali
+    if (dom.modalBackBtn) {
+      dom.modalBackBtn.addEventListener("click", () => closePreviewModal(false));
+    }
+
     if (dom.modalCloseBtn) {
-      dom.modalCloseBtn.addEventListener("click", closePreviewModal);
+      dom.modalCloseBtn.addEventListener("click", () => closePreviewModal(false));
     }
 
     if (dom.modalOverlay) {
       dom.modalOverlay.addEventListener("click", (e) => {
         if (e.target === dom.modalOverlay) {
-          closePreviewModal();
+          closePreviewModal(false);
         }
       });
     }
 
-    // Tutup Modal dengan tombol ESC
+    // Tangani Tombol Back Browser & Gesture Back HP (Android/iOS)
+    window.addEventListener("popstate", () => {
+      if (dom.modalOverlay.classList.contains("active")) {
+        closePreviewModal(true);
+      }
+    });
+
+    // Tutup Modal dengan tombol ESC keyboard
     window.addEventListener("keydown", (e) => {
       if (e.key === "Escape" && dom.modalOverlay.classList.contains("active")) {
-        closePreviewModal();
+        closePreviewModal(false);
       }
     });
 

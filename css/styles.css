@@ -811,25 +811,87 @@ body {
 }
 
 .modal-header {
-  padding: 16px 20px;
+  padding: 12px 18px;
   border-bottom: 1px solid var(--border-light);
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 12px;
   background: #ffffff;
+  position: relative;
+  z-index: 10;
+}
+
+.modal-header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  flex: 1;
+}
+
+/* Dedicated Back Button in Modal Header */
+.btn-modal-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #f1f5f9;
+  border: 1.5px solid var(--border-light);
+  color: #1e293b;
+  font-size: 0.875rem;
+  font-weight: 600;
+  padding: 8px 14px;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  flex-shrink: 0;
+  user-select: none;
+  touch-action: manipulation;
+}
+
+.btn-modal-back:hover,
+.btn-modal-back:active {
+  background: var(--primary-light);
+  color: var(--primary-hover);
+  border-color: #bae6fd;
+}
+
+.btn-modal-back svg {
+  transition: transform var(--transition-fast);
+}
+
+.btn-modal-back:hover svg {
+  transform: translateX(-2px);
 }
 
 .modal-title-wrap {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
+  min-width: 0;
   overflow: hidden;
 }
 
+.modal-title-content {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
 .modal-title-text {
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   font-weight: 700;
   color: #0f172a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.3;
+}
+
+.modal-category-text {
+  font-size: 0.75rem;
+  color: var(--primary);
+  font-weight: 600;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -840,6 +902,12 @@ body {
   align-items: center;
   gap: 8px;
   flex-shrink: 0;
+}
+
+.modal-btn-action {
+  font-size: 0.8125rem;
+  padding: 7px 12px;
+  gap: 6px;
 }
 
 .modal-close-btn {
@@ -854,6 +922,7 @@ body {
   color: var(--text-muted);
   cursor: pointer;
   transition: all var(--transition-fast);
+  touch-action: manipulation;
 }
 
 .modal-close-btn:hover {
@@ -973,48 +1042,276 @@ body {
 /* ==========================================================================
    Mobile Responsiveness
    ========================================================================== */
+/* ==========================================================================
+   Mobile & Tablet Responsiveness
+   ========================================================================== */
 @media (max-width: 768px) {
+  /* Header */
   .site-header {
     height: auto;
   }
 
   .nav-wrapper {
-    height: 64px;
+    height: 58px;
+    padding: 0 16px;
   }
 
+  .brand-title {
+    font-size: 1.05rem;
+  }
+
+  .brand-subtitle {
+    font-size: 0.72rem;
+  }
+
+  #header-folder-btn {
+    padding: 7px 12px;
+    font-size: 0.8rem;
+    gap: 6px;
+  }
+
+  /* Hero Section */
   .hero-section {
-    padding: 32px 0 16px;
+    padding: 24px 0 16px;
   }
 
   .hero-title {
-    font-size: 1.75rem;
+    font-size: 1.65rem;
+    line-height: 1.25;
   }
 
+  .hero-desc {
+    font-size: 0.9rem;
+    margin-bottom: 16px;
+  }
+
+  /* Stats Strip */
+  .stats-strip {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+    padding: 12px 10px;
+    width: 100%;
+    margin-top: 18px;
+  }
+
+  .stat-item {
+    padding: 0 4px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .stat-value {
+    font-size: 1.15rem;
+  }
+
+  .stat-label {
+    font-size: 0.7rem;
+  }
+
+  .stat-divider {
+    display: none;
+  }
+
+  /* Sticky Toolbar */
   .toolbar-section {
-    top: 64px;
+    top: 58px;
+    padding: 10px 0;
+    margin-bottom: 16px;
+  }
+
+  .search-controls-wrapper {
+    gap: 10px;
   }
 
   .search-main-row {
     flex-direction: column;
+    gap: 8px;
+  }
+
+  .search-input-box {
+    width: 100%;
+  }
+
+  .search-input {
+    height: 46px;
+    font-size: 16px; /* Mencegah auto-zoom di iOS Safari */
+    padding: 0 40px 0 44px;
+  }
+
+  .search-icon-svg {
+    left: 14px;
+    width: 18px;
+    height: 18px;
   }
 
   .sort-select-box {
     width: 100%;
   }
 
+  .sort-select {
+    height: 44px;
+    font-size: 0.85rem;
+    padding: 0 34px 0 14px;
+  }
+
+  /* Category Filter Pills Mobile Scroll */
+  .category-pills-container {
+    gap: 6px;
+    padding: 2px 2px 8px 2px;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .filter-pill {
+    padding: 7px 13px;
+    font-size: 0.775rem;
+    flex-shrink: 0;
+  }
+
+  /* Leaflets Grid */
   .leaflets-grid {
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 16px;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 14px;
+  }
+
+  /* Card Action Buttons */
+  .card-actions {
+    grid-template-columns: 1fr auto;
+    gap: 8px;
+  }
+
+  .btn-card-preview {
+    min-height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.825rem;
+  }
+
+  .btn-card-download {
+    min-height: 42px;
+    min-width: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Modal Fullscreen Native App Style on Mobile */
+  .modal-overlay {
+    padding: 0;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
   }
 
   .modal-window {
-    height: 95vh;
-    border-radius: var(--radius-lg);
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    max-width: 100%;
+    border-radius: 0;
+    border: none;
+    box-shadow: none;
+    animation: none;
   }
 
-  .stats-strip {
-    flex-wrap: wrap;
-    gap: 12px;
+  .modal-header {
+    padding: 8px 10px;
+    padding-top: max(8px, env(safe-area-inset-top));
+    gap: 8px;
+    background: #ffffff;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  }
+
+  .btn-modal-back {
+    padding: 7px 12px;
+    font-size: 0.825rem;
+    font-weight: 700;
+    background: #e0f2fe;
+    color: #0369a1;
+    border-color: #bae6fd;
+  }
+
+  .modal-brand-icon {
+    display: none;
+  }
+
+  .modal-title-text {
+    font-size: 0.875rem;
+    max-width: 130px;
+  }
+
+  .modal-category-text {
+    font-size: 0.7rem;
+  }
+
+  .modal-header-actions {
+    gap: 5px;
+  }
+
+  .modal-btn-action {
+    padding: 7px 9px;
+    font-size: 0.75rem;
+    min-height: 36px;
+  }
+
+  .modal-close-btn {
+    width: 34px;
+    height: 34px;
+  }
+
+  /* Toast Notification */
+  .toast-notice {
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
+    width: auto;
+    max-width: calc(100vw - 32px);
+    justify-content: center;
+    font-size: 0.825rem;
     padding: 10px 16px;
+  }
+
+  /* Footer */
+  .footer-content {
+    flex-direction: column;
+    text-align: center;
+    gap: 14px;
+  }
+
+  .footer-links {
+    justify-content: center;
+  }
+}
+
+/* Extra Small Phones (<= 480px) */
+@media (max-width: 480px) {
+  .leaflets-grid {
+    grid-template-columns: 1fr; /* Single column card view for clean reading */
+    gap: 16px;
+  }
+
+  .modal-title-text {
+    max-width: 100px;
+  }
+
+  /* Sembunyikan teks tombol aksi di modal, tampilkan icon agar muat */
+  .modal-btn-action .btn-action-text {
+    display: none;
+  }
+
+  .modal-btn-action {
+    padding: 8px;
+    min-width: 36px;
+    justify-content: center;
+  }
+
+  .btn-modal-back .btn-back-label {
+    display: inline-block; /* Tetap tampilkan tulisan Kembali */
+  }
+
+  .hero-title {
+    font-size: 1.45rem;
   }
 }
