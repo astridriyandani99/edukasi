@@ -33,21 +33,27 @@
      */
     injectGtagScript: function (gaId) {
       window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        window.dataLayer.push(arguments);
+      if (typeof window.gtag !== "function") {
+        function gtag() {
+          window.dataLayer.push(arguments);
+        }
+        window.gtag = gtag;
+
+        gtag("js", new Date());
+        gtag("config", gaId, {
+          send_page_view: true,
+          anonymize_ip: true,
+        });
       }
-      window.gtag = gtag;
 
-      gtag("js", new Date());
-      gtag("config", gaId, {
-        send_page_view: true,
-        anonymize_ip: true,
-      });
-
-      const script = document.createElement("script");
-      script.async = true;
-      script.src = `https://www.googletagmanager.com/gtag/js?id=${gaId}`;
-      document.head.appendChild(script);
+      // Hindari duplikasi jika tag sudah disematkan di index.html
+      const existingScript = document.querySelector(`script[src*="googletagmanager.com/gtag/js"]`);
+      if (!existingScript) {
+        const script = document.createElement("script");
+        script.async = true;
+        script.src = `https://www.googletagmanager.com/gtag/js?id=${gaId}`;
+        document.head.appendChild(script);
+      }
     },
 
     /**
