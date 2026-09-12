@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <!-- SEO & Social Meta Tags -->
+  <title>Portal Katalog Leaflet Edukasi Kesehatan - PKRS</title>
+  <meta name="description" content="Katalog interaktif materi edukasi leaflet kesehatan pasien dan masyarakat. Cari, baca, dan unduh informasi kesehatan terpercaya." />
+  <meta name="keywords" content="leaflet kesehatan, edukasi pasien, PKRS, rumah sakit, materi kesehatan, gizi, ginjal, hipertensi, diabetes" />
+  <meta property="og:title" content="Portal Katalog Leaflet Edukasi Kesehatan" />
+  <meta property="og:description" content="Pusat Informasi & Edukasi Kesehatan Pasien - Akses mudah puluhan leaflet panduan kesehatan." />
+  <meta property="og:type" content="website" />
+  
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <!-- Ambient background lighting effect -->
+  <div class="bg-ambient"></div>
+
+  <!-- Header Navigasi -->
+  <header class="site-header" id="main-header">
+    <div class="container nav-wrapper">
+      <a href="#" class="brand-logo" id="brand-link">
+        <div class="brand-icon-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/>
+            <path d="M6 6h10"/>
+            <path d="M6 10h10"/>
+            <path d="M6 14h6"/>
+          </svg>
+        </div>
+        <div class="brand-meta">
+          <span class="brand-title">E-Leaflet PKRS</span>
+          <span class="brand-subtitle">Edukasi Kesehatan Pasien</span>
+        </div>
+      </a>
+
+      <div class="header-actions">
+        <a 
+          href="https://drive.google.com/drive/folders/1ASLi0aywt5GY4lGBEa2k-ahepXTaV5ND?usp=sharing" 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          class="btn btn-outline" 
+          id="header-folder-btn"
+          title="Buka Folder Google Drive Asli"
+        >
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM19 18H6c-2.21 0-4-1.79-4-4 0-2.05 1.53-3.76 3.56-3.97l1.07-.11.5-.95C8.08 7.14 9.94 6 12 6c2.62 0 4.88 1.86 5.39 4.43l.3 1.5 1.53.11c1.56.1 2.78 1.41 2.78 2.96 0 1.65-1.35 3-3 3z"/>
+          </svg>
+          Folder Drive
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <main>
+    <section class="hero-section" id="hero">
+      <div class="container">
+        <div class="hero-badge">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Materi Resmi Edukasi Kesehatan
+        </div>
+        <h1 class="hero-title">
+          Temukan Informasi Medis <span>Akurat & Tepercaya</span>
+        </h1>
+        <p class="hero-description">
+          Akses panduan gaya hidup sehat, perawatan mandiri, edukasi penyakit, serta informasi hak & kewajiban pasien dalam format leaflet praktis.
+        </p>
+
+        <!-- Stats Bar -->
+        <div class="stats-strip" id="stats-strip">
+          <div class="stat-item">
+            <strong id="stat-total-leaflets">24</strong>
+            <span>Leaflet Tersedia</span>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-item">
+            <strong id="stat-total-categories">5</strong>
+            <span>Kategori Topik</span>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-item">
+            <strong id="stat-data-source">Siap Pakai</strong>
+            <span>Status Sinkronisasi</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Toolbar: Search & Category Filter -->
+    <section class="toolbar-section" id="toolbar">
+      <div class="container">
+        <div class="search-controls-wrapper">
+          <div class="search-main-row">
+            <!-- Kolom Pencarian -->
+            <div class="search-input-box">
+              <svg class="search-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+              <input 
+                type="text" 
+                id="search-input" 
+                class="search-input" 
+                placeholder="Ketik kata kunci (misal: 'Hipertensi', 'Ginjal', 'Diet', 'Obat', 'Luka')..." 
+                autocomplete="off"
+                aria-label="Cari judul atau topik leaflet"
+              />
+              <button id="search-clear-btn" class="search-clear-btn" title="Hapus pencarian" aria-label="Hapus teks pencarian">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+              </button>
+            </div>
+
+            <!-- Sort Dropdown -->
+            <div class="sort-select-box">
+              <select id="sort-select" class="sort-select" aria-label="Urutkan Leaflet">
+                <option value="az">Urutkan: Judul (A - Z)</option>
+                <option value="za">Urutkan: Judul (Z - A)</option>
+                <option value="category">Urutkan: Kategori</option>
+              </select>
+              <svg class="sort-select-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Kategori Pills -->
+          <div class="category-pills-container" id="category-pills" role="tablist" aria-label="Filter Kategori Leaflet">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Konten Katalog Leaflet -->
+    <section class="catalog-content" id="catalog">
+      <div class="container">
+        <!-- Results count bar -->
+        <div class="results-meta-bar">
+          <span id="results-count">Memuat materi leaflet...</span>
+        </div>
+
+        <!-- Grid Kartu Leaflet -->
+        <div class="leaflets-grid" id="leaflets-grid">
+          <!-- Rendered dynamically via app.js -->
+        </div>
+
+        <!-- Empty State (Jika pencarian tidak ditemukan) -->
+        <div class="empty-state" id="empty-state" style="display: none;">
+          <div class="empty-state-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              <line x1="8" y1="11" x2="14" y2="11"></line>
+            </svg>
+          </div>
+          <h2 class="empty-state-title">Leaflet Tidak Ditemukan</h2>
+          <p class="empty-state-desc">
+            Tidak ada materi yang sesuai <span id="empty-query-text"></span>. Silakan coba kata kunci lain atau reset filter.
+          </p>
+          <button id="empty-reset-btn" class="btn btn-primary">
+            Tampilkan Semua Leaflet
+          </button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Modal Pratinjau Dokumen PDF -->
+  <div class="modal-overlay" id="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-window">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <div class="brand-icon-box" style="width: 32px; height: 32px; border-radius: 8px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+          </div>
+          <div>
+            <h2 class="modal-title-text" id="modal-title">Pratinjau Dokumen</h2>
+            <span style="font-size: 0.75rem; color: var(--primary); font-weight: 600;" id="modal-category">Kategori</span>
+          </div>
+        </div>
+
+        <div class="modal-header-actions">
+          <button class="btn btn-outline" id="modal-share-btn" title="Salin Tautan Dokumen">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+            Salin Link
+          </button>
+          <a href="#" target="_blank" rel="noopener noreferrer" class="btn btn-outline" id="modal-drive-btn" title="Buka di Google Drive">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/></svg>
+            Drive
+          </a>
+          <a href="#" target="_blank" rel="noopener noreferrer" class="btn btn-primary" id="modal-download-btn" title="Unduh File PDF">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Unduh
+          </a>
+          <button class="modal-close-btn" id="modal-close-btn" title="Tutup (Esc)" aria-label="Tutup Pratinjau">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Iframe PDF View Container -->
+      <div class="modal-frame-container">
+        <div class="modal-loader" id="modal-loader">
+          <div class="spinner"></div>
+          <span>Memuat dokumen PDF...</span>
+        </div>
+        <iframe id="modal-iframe" class="modal-iframe" src="about:blank" title="Pratinjau Leaflet"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notice -->
+  <div class="toast-notice" id="toast-notice" role="status" aria-live="polite">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+    <span id="toast-message">Pemberitahuan</span>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer" id="main-footer">
+    <div class="container footer-content">
+      <div class="footer-brand">
+        <strong>Portal E-Leaflet Promosi Kesehatan</strong>
+        <p>Materi edukasi bersumber langsung dari repositori resmi Google Drive.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://drive.google.com/drive/folders/1ASLi0aywt5GY4lGBEa2k-ahepXTaV5ND?usp=sharing" target="_blank" rel="noopener noreferrer" class="footer-link">Google Drive Folder</a>
+        <span style="color: var(--border-light)">•</span>
+        <a href="#hero" class="footer-link">Kembali ke Atas</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/config.js"></script>
+  <script src="js/analytics.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

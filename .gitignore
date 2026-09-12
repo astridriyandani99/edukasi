@@ -1,0 +1,13 @@
+# OS metadata
+.DS_Store
+Thumbs.db
+
+# Node dependencies (if any in future)
+node_modules/
+
+# Environment files
+.env
+.env*.local
+
+# Logs
+*.log
