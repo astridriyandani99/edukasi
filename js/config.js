@@ -16,7 +16,7 @@ window.APP_CONFIG = {
    * Masukkan Measurement ID Anda di sini (Contoh: 'G-ABC123XYZ4').
    * Jika masih kosong ('G-XXXXXXXXXX' atau ''), sistem akan berjalan dalam mode testing di console.
    */
-  GA_MEASUREMENT_ID: "G-XXXXXXXXXX",
+  GA_MEASUREMENT_ID: "G-2ERL7RT3F0",
 
   /**
    * SINKRONISASI GOOGLE SHEETS (Opsional)
