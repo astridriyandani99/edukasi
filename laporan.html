@@ -634,6 +634,7 @@
         <div>
           <span style="font-weight: 800; font-size: 1.05rem;">Laporan Pengunjung PKRS</span>
           <span class="admin-badge">ADMIN</span>
+          <span class="admin-badge" id="data-source-badge" style="background: #0284c7; margin-left: 4px;">Penyimpanan Terhubung</span>
         </div>
       </div>
 
@@ -953,10 +954,45 @@
     }
 
     // Load & Render Data
-    function loadDashboardData() {
-      // Ambil log lokal
-      allLogs = window.VisitorTracker.getLocalLogs();
+    async function loadDashboardData() {
+      // 1. Ambil log lokal terlebih dahulu
+      const localLogs = window.VisitorTracker.getLocalLogs();
+      allLogs = localLogs;
       applyFilters();
+
+      const statusEl = document.getElementById("data-source-badge");
+
+      // 2. Jika Webhook Google Sheets terpasang, coba sinkronkan data cloud terpusat
+      const webhookUrl = window.APP_CONFIG?.TRACKER_WEBHOOK_URL;
+      if (webhookUrl && webhookUrl.startsWith("https://script.google.com")) {
+        if (statusEl) {
+          statusEl.textContent = "Menyinkronkan Cloud...";
+          statusEl.style.background = "#d97706";
+        }
+
+        try {
+          const res = await fetch(webhookUrl);
+          if (res.ok) {
+            const cloudLogs = await res.json();
+            if (Array.isArray(cloudLogs) && cloudLogs.length > 0) {
+              allLogs = cloudLogs;
+              applyFilters();
+              if (statusEl) {
+                statusEl.textContent = `Google Sheets (${cloudLogs.length} Data Terpusat)`;
+                statusEl.style.background = "#10b981";
+              }
+              return;
+            }
+          }
+        } catch (err) {
+          console.log("Menggunakan log penyimpanan lokal browser:", err);
+        }
+      }
+
+      if (statusEl) {
+        statusEl.textContent = `Lokal Browser (${allLogs.length} Data)`;
+        statusEl.style.background = "#0284c7";
+      }
     }
 
     function applyFilters() {

@@ -34,7 +34,7 @@ window.APP_CONFIG = {
    * Setiap ada yang membaca/mengunduh leaflet, data IP & leaflet akan otomatis dikirim ke Google Sheet Anda.
    * Jika kosong (""), data tetap dicatat di penyimpanan lokal browser untuk Dashboard Laporan.
    */
-  TRACKER_WEBHOOK_URL: "",
+  TRACKER_WEBHOOK_URL: "https://script.google.com/macros/s/AKfycby8A03Ug9KiAswCyUp8jyXiaTTTE9801fTZ6Crryp-VbpamJre4Q6rrPpqU8F22VmDs/exec",
 
   /**
    * PASSWORD AKSES DASHBOARD LAPORAN (/laporan.html)
