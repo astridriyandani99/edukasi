@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Laporan Pengunjung Leaflet - Khusus Admin PKRS</title>
+  
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/styles.css" />
+  
+  <style>
+    /* Admin Specific Dashboard Styling */
+    :root {
+      --admin-navy: #0f172a;
+      --admin-card-bg: #ffffff;
+      --admin-border: #e2e8f0;
+    }
+
+    body.admin-body {
+      background-color: #f8fafc;
+      color: #1e293b;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Auth Modal Screen */
+    .auth-overlay {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at center, rgba(15, 23, 42, 0.95) 0%, rgba(2, 6, 23, 0.98) 100%);
+      backdrop-filter: blur(16px);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .auth-card {
+      background: #ffffff;
+      border-radius: 20px;
+      width: 100%;
+      max-width: 420px;
+      padding: 36px 28px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      text-align: center;
+      animation: modalPop 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .auth-icon-badge {
+      width: 64px;
+      height: 64px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, #0284c7, #0369a1);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 18px;
+      box-shadow: 0 8px 20px rgba(2, 132, 199, 0.35);
+    }
+
+    .auth-title {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: #0f172a;
+      margin-bottom: 6px;
+    }
+
+    .auth-subtitle {
+      font-size: 0.85rem;
+      color: #64748b;
+      margin-bottom: 24px;
+      line-height: 1.4;
+    }
+
+    .auth-input-group {
+      position: relative;
+      margin-bottom: 16px;
+      text-align: left;
+    }
+
+    .auth-input-label {
+      font-size: 0.775rem;
+      font-weight: 700;
+      color: #475569;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .auth-input-box {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .auth-input {
+      width: 100%;
+      height: 48px;
+      padding: 0 44px 0 16px;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 12px;
+      font-size: 0.95rem;
+      font-family: inherit;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    .auth-input:focus {
+      border-color: #0284c7;
+      box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.2);
+    }
+
+    .auth-toggle-pwd {
+      position: absolute;
+      right: 12px;
+      background: none;
+      border: none;
+      color: #64748b;
+      cursor: pointer;
+      padding: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .auth-error-msg {
+      font-size: 0.825rem;
+      color: #dc2626;
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      border-radius: 8px;
+      padding: 8px 12px;
+      margin-bottom: 16px;
+      display: none;
+    }
+
+    .auth-btn-submit {
+      width: 100%;
+      height: 48px;
+      background: linear-gradient(135deg, #0284c7, #0369a1);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);
+      transition: all 0.2s ease;
+    }
+
+    .auth-btn-submit:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(2, 132, 199, 0.4);
+    }
+
+    .auth-back-link {
+      display: inline-block;
+      margin-top: 18px;
+      font-size: 0.85rem;
+      color: #64748b;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .auth-back-link:hover {
+      color: #0284c7;
+    }
+
+    /* Admin Navbar */
+    .admin-navbar {
+      background: #0f172a;
+      color: white;
+      padding: 14px 0;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      position: sticky;
+      top: 0;
+      z-index: 40;
+    }
+
+    .admin-nav-container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .admin-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .admin-badge {
+      background: #0284c7;
+      color: white;
+      font-size: 0.7rem;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 6px;
+      letter-spacing: 0.5px;
+    }
+
+    .admin-nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .admin-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      padding: 8px 14px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.08);
+      color: #f1f5f9;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    .admin-btn:hover {
+      background: rgba(255, 255, 255, 0.18);
+      color: white;
+    }
+
+    .admin-btn-primary {
+      background: #0284c7;
+      border-color: #0284c7;
+    }
+
+    .admin-btn-primary:hover {
+      background: #0369a1;
+    }
+
+    .admin-btn-danger {
+      background: rgba(220, 38, 38, 0.2);
+      color: #fca5a5;
+      border-color: rgba(220, 38, 38, 0.4);
+    }
+
+    .admin-btn-danger:hover {
+      background: #dc2626;
+      color: white;
+    }
+
+    /* Main Dashboard Layout */
+    .admin-main {
+      max-width: 1280px;
+      margin: 24px auto;
+      padding: 0 20px 48px;
+      flex: 1;
+      width: 100%;
+    }
+
+    /* KPI Summary Cards Grid */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .kpi-card {
+      background: white;
+      border-radius: 16px;
+      padding: 20px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .kpi-icon-wrap {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .kpi-icon-blue { background: #e0f2fe; color: #0284c7; }
+    .kpi-icon-green { background: #dcfce7; color: #16a34a; }
+    .kpi-icon-purple { background: #f3e8ff; color: #9333ea; }
+    .kpi-icon-amber { background: #fef3c7; color: #d97706; }
+
+    .kpi-value {
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: #0f172a;
+      line-height: 1.1;
+    }
+
+    .kpi-label {
+      font-size: 0.8rem;
+      color: #64748b;
+      font-weight: 600;
+      margin-top: 4px;
+    }
+
+    /* Insights Section (Top Leaflet & Categories) */
+    .insights-grid {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr;
+      gap: 18px;
+      margin-bottom: 24px;
+    }
+
+    .insight-card {
+      background: white;
+      border-radius: 16px;
+      border: 1px solid #e2e8f0;
+      padding: 22px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+    }
+
+    .insight-card-title {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: #0f172a;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .top-item-row {
+      margin-bottom: 14px;
+    }
+
+    .top-item-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .top-item-bar-bg {
+      height: 8px;
+      background: #f1f5f9;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .top-item-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #0284c7, #38bdf8);
+      border-radius: 999px;
+      transition: width 0.5s ease;
+    }
+
+    /* Table Toolbar */
+    .table-toolbar {
+      background: white;
+      border-radius: 16px 16px 0 0;
+      border: 1px solid #e2e8f0;
+      border-bottom: none;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .table-toolbar-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: 1;
+      min-width: 260px;
+    }
+
+    .table-search-input {
+      width: 100%;
+      max-width: 320px;
+      height: 40px;
+      padding: 0 14px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-family: inherit;
+      outline: none;
+    }
+
+    .table-filter-select {
+      height: 40px;
+      padding: 0 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-family: inherit;
+      background: white;
+      outline: none;
+    }
+
+    .table-toolbar-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Logs Table Card */
+    .table-container {
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 0 0 16px 16px;
+      overflow-x: auto;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+    }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.85rem;
+    }
+
+    .data-table th {
+      background: #f8fafc;
+      color: #475569;
+      font-weight: 700;
+      padding: 12px 16px;
+      border-bottom: 1.5px solid #e2e8f0;
+      white-space: nowrap;
+    }
+
+    .data-table td {
+      padding: 12px 16px;
+      border-bottom: 1px solid #f1f5f9;
+      color: #1e293b;
+      vertical-align: middle;
+    }
+
+    .data-table tr:hover td {
+      background: #f8fafc;
+    }
+
+    .badge-ip {
+      font-family: monospace;
+      background: #f1f5f9;
+      color: #0f172a;
+      padding: 3px 7px;
+      border-radius: 6px;
+      font-size: 0.775rem;
+      border: 1px solid #e2e8f0;
+    }
+
+    .badge-user {
+      font-family: monospace;
+      background: #eff6ff;
+      color: #1d4ed8;
+      padding: 3px 7px;
+      border-radius: 6px;
+      font-size: 0.775rem;
+      font-weight: 700;
+    }
+
+    .badge-action-preview {
+      background: #e0f2fe;
+      color: #0369a1;
+      font-weight: 700;
+      font-size: 0.75rem;
+      padding: 3px 8px;
+      border-radius: 999px;
+    }
+
+    .badge-action-download {
+      background: #dcfce7;
+      color: #15803d;
+      font-weight: 700;
+      font-size: 0.75rem;
+      padding: 3px 8px;
+      border-radius: 999px;
+    }
+
+    .badge-action-drive {
+      background: #ffedd5;
+      color: #c2410c;
+      font-weight: 700;
+      font-size: 0.75rem;
+      padding: 3px 8px;
+      border-radius: 999px;
+    }
+
+    /* Modal Panduan Webhook */
+    .guide-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(8px);
+      z-index: 200;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .guide-modal.active {
+      display: flex;
+    }
+
+    .guide-window {
+      background: white;
+      border-radius: 20px;
+      width: 100%;
+      max-width: 680px;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
+    }
+
+    .guide-header {
+      padding: 18px 24px;
+      border-bottom: 1px solid #e2e8f0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .guide-body {
+      padding: 24px;
+      overflow-y: auto;
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+
+    .code-block-box {
+      background: #0f172a;
+      color: #e2e8f0;
+      padding: 14px;
+      border-radius: 10px;
+      font-family: monospace;
+      font-size: 0.8rem;
+      overflow-x: auto;
+      margin: 12px 0;
+      position: relative;
+    }
+
+    /* Print Styles */
+    @media print {
+      .auth-overlay, .admin-navbar, .table-toolbar, .guide-modal {
+        display: none !important;
+      }
+      body { background: white !important; }
+      .admin-main { max-width: 100% !important; margin: 0 !important; padding: 0 !important; }
+      .kpi-card, .insight-card, .table-container { border: 1px solid #ccc !important; box-shadow: none !important; }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .insights-grid { grid-template-columns: 1fr; }
+      .table-toolbar { flex-direction: column; align-items: stretch; }
+      .table-toolbar-left { flex-direction: column; }
+      .table-search-input { max-width: 100%; }
+      .admin-nav-actions { width: 100%; justify-content: flex-start; }
+    }
+  </style>
+</head>
+<body class="admin-body">
+
+  <!-- 1. Overlay Login Password -->
+  <div class="auth-overlay" id="auth-overlay">
+    <div class="auth-card">
+      <div class="auth-icon-badge">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>
+      </div>
+      <h1 class="auth-title">Akses Khusus Admin</h1>
+      <p class="auth-subtitle">Masukkan kata sandi admin untuk melihat laporan pengunjung unik dan statistik pembaca leaflet PKRS.</p>
+
+      <div class="auth-error-msg" id="auth-error">Kata sandi yang Anda masukkan salah!</div>
+
+      <form id="auth-form" onsubmit="handleAuthSubmit(event)">
+        <div class="auth-input-group">
+          <label class="auth-input-label" for="admin-pwd">Kata Sandi Admin</label>
+          <div class="auth-input-box">
+            <input 
+              type="password" 
+              id="admin-pwd" 
+              class="auth-input" 
+              placeholder="Masukkan password admin..." 
+              required 
+              autocomplete="current-password"
+            />
+            <button type="button" class="auth-toggle-pwd" id="auth-toggle-btn" title="Lihat/Sembunyikan Sandi">
+              <svg id="eye-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" class="auth-btn-submit" id="btn-login">
+          Masuk ke Dashboard
+        </button>
+      </form>
+
+      <a href="index.html" class="auth-back-link">← Kembali ke Halaman Utama Leaflet</a>
+    </div>
+  </div>
+
+  <!-- 2. Header / Navigasi Admin -->
+  <header class="admin-navbar">
+    <div class="admin-nav-container">
+      <div class="admin-brand">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2.2">
+          <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/>
+          <path d="M6 6h10"/><path d="M6 10h10"/><path d="M6 14h6"/>
+        </svg>
+        <div>
+          <span style="font-weight: 800; font-size: 1.05rem;">Laporan Pengunjung PKRS</span>
+          <span class="admin-badge">ADMIN</span>
+        </div>
+      </div>
+
+      <div class="admin-nav-actions">
+        <button class="admin-btn" id="btn-refresh" title="Muat Ulang Log Terbaru">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>
+          Segarkan Data
+        </button>
+        <button class="admin-btn" id="btn-guide" title="Petunjuk Hubungkan ke Google Sheet">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          Panduan Google Sheet
+        </button>
+        <a href="index.html" class="admin-btn">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          Buka Katalog Web
+        </a>
+        <button class="admin-btn admin-btn-danger" id="btn-logout" title="Keluar dari mode admin">
+          Keluar
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- 3. Dashboard Konten -->
+  <main class="admin-main">
+    
+    <!-- KPI Metrics -->
+    <div class="kpi-grid">
+      <!-- Pengunjung Unik -->
+      <div class="kpi-card">
+        <div class="kpi-icon-wrap kpi-icon-blue">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <div>
+          <div class="kpi-value" id="stat-unique-visitors">0</div>
+          <div class="kpi-label">Pengunjung Unik (IP / ID)</div>
+        </div>
+      </div>
+
+      <!-- Dibaca (Pratinjau) -->
+      <div class="kpi-card">
+        <div class="kpi-icon-wrap kpi-icon-purple">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+        </div>
+        <div>
+          <div class="kpi-value" id="stat-total-views">0</div>
+          <div class="kpi-label">Total Dibaca (Pratinjau)</div>
+        </div>
+      </div>
+
+      <!-- Unduhan PDF -->
+      <div class="kpi-card">
+        <div class="kpi-icon-wrap kpi-icon-green">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        </div>
+        <div>
+          <div class="kpi-value" id="stat-total-downloads">0</div>
+          <div class="kpi-label">Total Unduhan File PDF</div>
+        </div>
+      </div>
+
+      <!-- Total Interaksi -->
+      <div class="kpi-card">
+        <div class="kpi-icon-wrap kpi-icon-amber">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><activity><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></activity></svg>
+        </div>
+        <div>
+          <div class="kpi-value" id="stat-total-actions">0</div>
+          <div class="kpi-label">Total Semua Interaksi</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Insights Grid (Top Leaflets & Category Breakdown) -->
+    <div class="insights-grid">
+      <!-- Top 5 Leaflet Terpopuler -->
+      <div class="insight-card">
+        <div class="insight-card-title">
+          <span>🏆 Top Leaflet Paling Sering Diakses</span>
+          <span style="font-size: 0.75rem; color: #64748b; font-weight: normal;">Berdasarkan Pembaca & Unduhan</span>
+        </div>
+        <div id="top-leaflets-list">
+          <p style="color: #94a3b8; font-size: 0.85rem;">Belum ada aktivitas pembacaan leaflet.</p>
+        </div>
+      </div>
+
+      <!-- Distribusi Perangkat & Kategori -->
+      <div class="insight-card">
+        <div class="insight-card-title">
+          <span>📱 Perangkat Pengunjung</span>
+        </div>
+        <div id="device-distribution-list">
+          <p style="color: #94a3b8; font-size: 0.85rem;">Belum ada data perangkat.</p>
+        </div>
+
+        <div class="insight-card-title" style="margin-top: 24px;">
+          <span>🏷️ Distribusi Kategori</span>
+        </div>
+        <div id="category-distribution-list">
+          <p style="color: #94a3b8; font-size: 0.85rem;">Belum ada data kategori.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabel Toolbar & Data Log -->
+    <div class="table-toolbar">
+      <div class="table-toolbar-left">
+        <input 
+          type="text" 
+          class="table-search-input" 
+          id="table-search" 
+          placeholder="Cari Judul, IP, atau ID Pengunjung..." 
+        />
+        <select class="table-filter-select" id="filter-action">
+          <option value="all">Semua Jenis Aksi</option>
+          <option value="Pratinjau Leaflet">Pratinjau Saja</option>
+          <option value="Unduh PDF">Unduh PDF Saja</option>
+          <option value="Buka Google Drive">Buka Drive Saja</option>
+        </select>
+      </div>
+
+      <div class="table-toolbar-right">
+        <button class="admin-btn admin-btn-primary" id="btn-export-csv" title="Unduh data dalam format CSV/Excel">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Ekspor CSV / Excel
+        </button>
+        <button class="admin-btn" id="btn-print" title="Cetak Laporan atau Simpan sebagai PDF">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect width="12" height="8" x="6" y="14"/></svg>
+          Cetak PDF
+        </button>
+        <button class="admin-btn admin-btn-danger" id="btn-clear-logs" title="Hapus seluruh log lokal">
+          Hapus Log
+        </button>
+      </div>
+    </div>
+
+    <!-- Data Table Container -->
+    <div class="table-container">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th style="width: 50px;">No</th>
+            <th>Waktu (WIB)</th>
+            <th>IP Address</th>
+            <th>ID Pengunjung</th>
+            <th>Judul Leaflet</th>
+            <th>Kategori</th>
+            <th>Aksi</th>
+            <th>Perangkat</th>
+          </tr>
+        </thead>
+        <tbody id="logs-table-body">
+          <tr>
+            <td colspan="8" style="text-align: center; color: #64748b; padding: 32px;">
+              Memuat data log pengunjung...
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </main>
+
+  <!-- 4. Modal Panduan Google Sheets Webhook -->
+  <div class="guide-modal" id="guide-modal">
+    <div class="guide-window">
+      <div class="guide-header">
+        <h3 style="font-weight: 800; font-size: 1.15rem; color: #0f172a;">
+          📄 Panduan Sinkronisasi Google Sheets
+        </h3>
+        <button class="modal-close-btn" id="btn-close-guide">&times;</button>
+      </div>
+      <div class="guide-body">
+        <p>Agar setiap pengunjung yang mengakses leaflet otomatis tercatat ke spreadsheet rumah sakit Anda secara online, ikuti langkah berikut (hanya 1 menit):</p>
+        
+        <ol style="margin-left: 20px; margin-top: 10px; display: flex; flex-direction: column; gap: 8px;">
+          <li>Buka <strong>Google Spreadsheet</strong> baru di Google Drive Anda.</li>
+          <li>Klik menu <strong>Ekstensi (Extensions)</strong> &rarr; <strong>Apps Script</strong>.</li>
+          <li>Hapus semua isi editor, lalu salin dan tempel kode skrip di bawah ini:</li>
+        </ol>
+
+        <div class="code-block-box" id="script-code-display">
+// Salin isi dari file: google-apps-script-template.js
+        </div>
+        <button class="admin-btn admin-btn-primary" id="btn-copy-code" style="margin-bottom: 14px;">
+          Salin Seluruh Kode Script
+        </button>
+
+        <ol start="4" style="margin-left: 20px; display: flex; flex-direction: column; gap: 8px;">
+          <li>Klik <strong>Simpan (Save 💾)</strong>.</li>
+          <li>Klik tombol biru <strong>Terapkan (Deploy)</strong> &rarr; <strong>Penerapan baru (New deployment)</strong>.</li>
+          <li>Pilih jenis <strong>Aplikasi Web (Web app)</strong>.</li>
+          <li>Atur <strong>"Akses: Siapa saja (Anyone)"</strong> &rarr; klik <strong>Terapkan</strong>.</li>
+          <li>Salin <strong>URL Aplikasi Web</strong> yang dihasilkan (berawalan <code>https://script.google.com/macros/s/...</code>).</li>
+          <li>Buka file <code>js/config.js</code> di proyek ini dan tempel di baris <code>TRACKER_WEBHOOK_URL: "URL_ANDA"</code>.</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/config.js"></script>
+  <script src="js/tracker.js"></script>
+  <script>
+    // Inisialisasi State Laporan
+    let allLogs = [];
+    let filteredLogs = [];
+
+    // Cek status sesi login
+    document.addEventListener("DOMContentLoaded", () => {
+      const isAuth = sessionStorage.getItem("pkrs_admin_auth") === "true";
+      const overlay = document.getElementById("auth-overlay");
+
+      if (isAuth) {
+        overlay.style.display = "none";
+        loadDashboardData();
+      } else {
+        overlay.style.display = "flex";
+        document.getElementById("admin-pwd").focus();
+      }
+
+      setupAdminListeners();
+    });
+
+    // Form Submit Login
+    function handleAuthSubmit(e) {
+      e.preventDefault();
+      const inputPwd = document.getElementById("admin-pwd").value;
+      const errorMsg = document.getElementById("auth-error");
+      const defaultPwd = window.APP_CONFIG?.ADMIN_PASSWORD || "adminpkrs2026";
+
+      if (inputPwd === defaultPwd) {
+        sessionStorage.setItem("pkrs_admin_auth", "true");
+        document.getElementById("auth-overlay").style.display = "none";
+        errorMsg.style.display = "none";
+        loadDashboardData();
+      } else {
+        errorMsg.style.display = "block";
+        document.getElementById("admin-pwd").value = "";
+        document.getElementById("admin-pwd").focus();
+      }
+    }
+
+    // Toggle Password Visibility
+    document.getElementById("auth-toggle-btn").addEventListener("click", () => {
+      const input = document.getElementById("admin-pwd");
+      input.type = input.type === "password" ? "text" : "password";
+    });
+
+    // Setup Admin Event Listeners
+    function setupAdminListeners() {
+      // Logout
+      document.getElementById("btn-logout").addEventListener("click", () => {
+        if (confirm("Apakah Anda yakin ingin keluar dari halaman laporan admin?")) {
+          sessionStorage.removeItem("pkrs_admin_auth");
+          window.location.reload();
+        }
+      });
+
+      // Refresh
+      document.getElementById("btn-refresh").addEventListener("click", () => {
+        loadDashboardData();
+      });
+
+      // Search & Filter
+      document.getElementById("table-search").addEventListener("input", applyFilters);
+      document.getElementById("filter-action").addEventListener("change", applyFilters);
+
+      // Export CSV
+      document.getElementById("btn-export-csv").addEventListener("click", exportToCSV);
+
+      // Print PDF
+      document.getElementById("btn-print").addEventListener("click", () => {
+        window.print();
+      });
+
+      // Clear Logs
+      document.getElementById("btn-clear-logs").addEventListener("click", () => {
+        if (confirm("Hapus seluruh log lokal? Tindakan ini tidak dapat dibatalkan (data di Google Sheet jika ada tetap aman).")) {
+          window.VisitorTracker.clearLocalLogs();
+          loadDashboardData();
+        }
+      });
+
+      // Guide Modal
+      const guideModal = document.getElementById("guide-modal");
+      document.getElementById("btn-guide").addEventListener("click", () => {
+        guideModal.classList.add("active");
+        fetchGuideCode();
+      });
+      document.getElementById("btn-close-guide").addEventListener("click", () => {
+        guideModal.classList.remove("active");
+      });
+      guideModal.addEventListener("click", (e) => {
+        if (e.target === guideModal) guideModal.classList.remove("active");
+      });
+
+      // Copy Script Code
+      document.getElementById("btn-copy-code").addEventListener("click", () => {
+        const codeText = document.getElementById("script-code-display").textContent;
+        navigator.clipboard.writeText(codeText).then(() => {
+          alert("Kode Google Apps Script berhasil disalin ke clipboard!");
+        });
+      });
+    }
+
+    async function fetchGuideCode() {
+      try {
+        const res = await fetch("google-apps-script-template.js");
+        if (res.ok) {
+          const text = await res.text();
+          document.getElementById("script-code-display").textContent = text;
+        }
+      } catch (e) {
+        // Biarkan teks default jika tidak dapat dimuat
+      }
+    }
+
+    // Load & Render Data
+    function loadDashboardData() {
+      // Ambil log lokal
+      allLogs = window.VisitorTracker.getLocalLogs();
+      applyFilters();
+    }
+
+    function applyFilters() {
+      const search = document.getElementById("table-search").value.toLowerCase().trim();
+      const actionFilter = document.getElementById("filter-action").value;
+
+      filteredLogs = allLogs.filter((item) => {
+        const matchSearch =
+          !search ||
+          (item.leaflet_title && item.leaflet_title.toLowerCase().includes(search)) ||
+          (item.ip && item.ip.toLowerCase().includes(search)) ||
+          (item.visitor_id && item.visitor_id.toLowerCase().includes(search)) ||
+          (item.leaflet_category && item.leaflet_category.toLowerCase().includes(search));
+
+        const matchAction = actionFilter === "all" || item.action === actionFilter;
+        return matchSearch && matchAction;
+      });
+
+      renderKPIs(allLogs);
+      renderTopLeaflets(allLogs);
+      renderDistributions(allLogs);
+      renderTable(filteredLogs);
+    }
+
+    function renderKPIs(logs) {
+      // 1. Pengunjung Unik (Kombinasi Distinct IP & Visitor ID)
+      const uniqueKeys = new Set();
+      let totalViews = 0;
+      let totalDownloads = 0;
+
+      logs.forEach((item) => {
+        const key = `${item.ip || 'no-ip'}_${item.visitor_id || 'no-id'}`;
+        uniqueKeys.add(key);
+
+        if (item.action === "Pratinjau Leaflet") totalViews++;
+        if (item.action === "Unduh PDF") totalDownloads++;
+      });
+
+      document.getElementById("stat-unique-visitors").textContent = uniqueKeys.size;
+      document.getElementById("stat-total-views").textContent = totalViews;
+      document.getElementById("stat-total-downloads").textContent = totalDownloads;
+      document.getElementById("stat-total-actions").textContent = logs.length;
+    }
+
+    function renderTopLeaflets(logs) {
+      const listContainer = document.getElementById("top-leaflets-list");
+      if (logs.length === 0) {
+        listContainer.innerHTML = `<p style="color: #94a3b8; font-size: 0.85rem; padding: 12px 0;">Belum ada aktivitas pembacaan leaflet.</p>`;
+        return;
+      }
+
+      // Hitung frekuensi per leaflet
+      const counts = {};
+      logs.forEach((item) => {
+        if (!item.leaflet_title || item.leaflet_title === "-") return;
+        const key = item.leaflet_title;
+        counts[key] = (counts[key] || 0) + 1;
+      });
+
+      // Urutkan terbesar
+      const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, 5);
+      const maxCount = sorted[0] ? sorted[0][1] : 1;
+
+      let html = "";
+      sorted.forEach(([title, count], idx) => {
+        const pct = Math.round((count / maxCount) * 100);
+        html += `
+          <div class="top-item-row">
+            <div class="top-item-meta">
+              <span><strong>#${idx + 1}</strong> ${escapeHtml(title)}</span>
+              <span style="color: #0284c7;">${count} kali diakses</span>
+            </div>
+            <div class="top-item-bar-bg">
+              <div class="top-item-bar-fill" style="width: ${pct}%"></div>
+            </div>
+          </div>
+        `;
+      });
+
+      listContainer.innerHTML = html;
+    }
+
+    function renderDistributions(logs) {
+      // Perangkat
+      const deviceList = document.getElementById("device-distribution-list");
+      const categoryList = document.getElementById("category-distribution-list");
+
+      if (logs.length === 0) {
+        deviceList.innerHTML = `<p style="color: #94a3b8; font-size: 0.85rem;">Belum ada data.</p>`;
+        categoryList.innerHTML = `<p style="color: #94a3b8; font-size: 0.85rem;">Belum ada data.</p>`;
+        return;
+      }
+
+      const devices = {};
+      const categories = {};
+
+      logs.forEach((item) => {
+        const dev = item.device || "Lainnya";
+        devices[dev] = (devices[dev] || 0) + 1;
+
+        const cat = item.leaflet_category || "Umum";
+        categories[cat] = (categories[cat] || 0) + 1;
+      });
+
+      let devHtml = "";
+      Object.entries(devices).forEach(([dev, count]) => {
+        const pct = Math.round((count / logs.length) * 100);
+        devHtml += `
+          <div style="display: flex; justify-content: space-between; font-size: 0.825rem; margin-bottom: 6px;">
+            <span>${escapeHtml(dev)}</span>
+            <span style="font-weight: 700;">${count} (${pct}%)</span>
+          </div>
+        `;
+      });
+      deviceList.innerHTML = devHtml;
+
+      let catHtml = "";
+      Object.entries(categories).forEach(([cat, count]) => {
+        const pct = Math.round((count / logs.length) * 100);
+        catHtml += `
+          <div style="display: flex; justify-content: space-between; font-size: 0.825rem; margin-bottom: 6px;">
+            <span>${escapeHtml(cat)}</span>
+            <span style="font-weight: 700;">${count} (${pct}%)</span>
+          </div>
+        `;
+      });
+      categoryList.innerHTML = catHtml;
+    }
+
+    function renderTable(logs) {
+      const tbody = document.getElementById("logs-table-body");
+      if (logs.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="8" style="text-align: center; color: #94a3b8; padding: 40px;">
+              Tidak ada data log yang sesuai dengan filter pencarian.
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      let html = "";
+      logs.forEach((item, index) => {
+        let actionBadge = `<span class="badge-action-preview">Pratinjau</span>`;
+        if (item.action === "Unduh PDF") {
+          actionBadge = `<span class="badge-action-download">Unduh PDF</span>`;
+        } else if (item.action === "Buka Google Drive") {
+          actionBadge = `<span class="badge-action-drive">Buka Drive</span>`;
+        }
+
+        html += `
+          <tr>
+            <td>${index + 1}</td>
+            <td style="white-space: nowrap; font-size: 0.8rem; color: #64748b;">${escapeHtml(item.timestamp)}</td>
+            <td><span class="badge-ip">${escapeHtml(item.ip || "-")}</span></td>
+            <td><span class="badge-user">${escapeHtml(item.visitor_id || "-")}</span></td>
+            <td>
+              <strong style="color: #0f172a;">${escapeHtml(item.leaflet_title || "-")}</strong>
+              ${item.leaflet_code ? `<br><small style="color: #64748b;">${escapeHtml(item.leaflet_code)}</small>` : ""}
+            </td>
+            <td><span style="font-size: 0.775rem; color: #475569;">${escapeHtml(item.leaflet_category || "-")}</span></td>
+            <td>${actionBadge}</td>
+            <td style="font-size: 0.8rem; color: #475569;">${escapeHtml(item.device || "-")}</td>
+          </tr>
+        `;
+      });
+
+      tbody.innerHTML = html;
+    }
+
+    // Ekspor ke CSV / Excel
+    function exportToCSV() {
+      if (filteredLogs.length === 0) {
+        alert("Tidak ada data log untuk diekspor!");
+        return;
+      }
+
+      const headers = ["No", "Waktu (WIB)", "IP Address", "ID Pengunjung", "Kode Leaflet", "Judul Leaflet", "Kategori", "Aksi", "Perangkat"];
+      const rows = filteredLogs.map((item, idx) => [
+        idx + 1,
+        `"${item.timestamp || ''}"`,
+        `"${item.ip || ''}"`,
+        `"${item.visitor_id || ''}"`,
+        `"${item.leaflet_code || ''}"`,
+        `"${(item.leaflet_title || '').replace(/"/g, '""')}"`,
+        `"${item.leaflet_category || ''}"`,
+        `"${item.action || ''}"`,
+        `"${item.device || ''}"`
+      ]);
+
+      const csvContent = "data:text/csv;charset=utf-8,\uFEFF" + [headers.join(","), ...rows.map(r => r.join(","))].join("\n");
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      const dateStr = new Date().toISOString().split("T")[0];
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", `Laporan_Pengunjung_Leaflet_PKRS_${dateStr}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    function escapeHtml(str) {
+      if (!str) return "";
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+  </script>
+</body>
+</html>

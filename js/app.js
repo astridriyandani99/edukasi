@@ -231,6 +231,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (downloadBtn) {
         downloadBtn.addEventListener("click", (e) => {
           window.Analytics.trackLeafletDownload(leaflet);
+          if (window.VisitorTracker) {
+            window.VisitorTracker.trackAction("Unduh PDF", leaflet);
+          }
           showToast(`Mengunduh: ${leaflet.title}`);
         });
       }
@@ -270,6 +273,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       dom.modalDownloadBtn.href = leaflet.download_url;
       dom.modalDownloadBtn.onclick = () => {
         window.Analytics.trackLeafletDownload(leaflet);
+        if (window.VisitorTracker) {
+          window.VisitorTracker.trackAction("Unduh PDF", leaflet);
+        }
         showToast("Memulai pengunduhan file...");
       };
     }
@@ -278,6 +284,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       dom.modalDriveBtn.href = leaflet.drive_url;
       dom.modalDriveBtn.onclick = () => {
         window.Analytics.trackLeafletOpenDrive(leaflet);
+        if (window.VisitorTracker) {
+          window.VisitorTracker.trackAction("Buka Google Drive", leaflet);
+        }
       };
     }
 
@@ -301,8 +310,11 @@ document.addEventListener("DOMContentLoaded", async () => {
       history.pushState({ modalOpen: true, leafletId: leaflet.id }, "", "#preview");
     }
 
-    // Lacak Event Tampilan Leaflet di GA4
+    // Lacak Event Tampilan Leaflet di GA4 & Pelacak Pengunjung Mandiri
     window.Analytics.trackLeafletView(leaflet);
+    if (window.VisitorTracker) {
+      window.VisitorTracker.trackAction("Pratinjau Leaflet", leaflet);
+    }
   }
 
   function closePreviewModal(fromHistory = false) {

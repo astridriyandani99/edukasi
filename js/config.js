@@ -28,6 +28,20 @@ window.APP_CONFIG = {
    */
   GOOGLE_SHEET_CSV_URL: "",
 
+  /**
+   * PELACAKAN MANDIRI GOOGLE SHEETS (Webhook)
+   * Tempel URL Web App dari Google Apps Script di bawah ini.
+   * Setiap ada yang membaca/mengunduh leaflet, data IP & leaflet akan otomatis dikirim ke Google Sheet Anda.
+   * Jika kosong (""), data tetap dicatat di penyimpanan lokal browser untuk Dashboard Laporan.
+   */
+  TRACKER_WEBHOOK_URL: "",
+
+  /**
+   * PASSWORD AKSES DASHBOARD LAPORAN (/laporan.html)
+   * Anda dapat mengganti kata sandi ini sesuai kebutuhan.
+   */
+  ADMIN_PASSWORD: "adminpkrs2026",
+
   // Pengaturan Tampilan
   ITEMS_PER_PAGE: 12,
   ENABLE_PDF_MODAL: true, // Buka preview PDF di dalam popup modal
